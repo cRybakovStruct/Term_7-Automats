@@ -94,7 +94,7 @@ class LexicalAnalyzer():
         # unsexpected symbols
         elif symbol in '56789':
             self.buff += symbol
-            return self.q_eror(f'Получено: {symbol} в лексеме {self.buff}, в то время как цифра не должна превышать 4')
+            return self.q_err(f'Получено: {symbol} в лексеме {self.buff}, в то время как цифра не должна превышать 4')
 
         # read start of variable name
         elif symbol.isalpha:
@@ -122,7 +122,7 @@ class LexicalAnalyzer():
         # unexpected sumbols
         elif (symbol.isalpha or symbol in '56789'):
             self.buff += symbol
-            return self.q_eror(f'Ожидается цифра или знак арифметической операции, в то время как получено: {symbol} в лексеме {self.buff}')
+            return self.q_err(f'Ожидается цифра или знак арифметической операции, в то время как получено: {symbol} в лексеме {self.buff}')
 
     def q_2(self):
         self.writeToLog('q_2')
@@ -142,7 +142,7 @@ class LexicalAnalyzer():
             self.buff += symbol
             return self.q_2()
 
-    def q_eror(self, msg: str):
+    def q_err(self, msg: str):
         self.writeToLog(f'Error: {msg}')
         raise IncorrectLexic('Incorrect input string')
 
@@ -552,7 +552,7 @@ class SyntaxAnalyzer():
         self.main_stack = self.main_stack[:self.index-1]
         self.main_stack.append({'not_terminal': 'S'})
         self.main_stack += tmp
-        self.writeToLog(f'\tGo\tfrom\tr_1 \tto\ts_0 \tpack 1:\t"S->E"')
+        self.writeToLog(f'\tGo\tfrom\tr_1 \tto\ts_0 \tpack 1:\t"S->E$"')
         self.q_0()
 
     def r_2(self):
