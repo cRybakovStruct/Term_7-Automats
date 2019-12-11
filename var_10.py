@@ -182,6 +182,12 @@ class SyntaxAnalyzer():
         print(msg)
         fout.close()
 
+    def myOutput(self, msg):
+        fout = open(
+            './Var10_output.log', 'ta')
+        fout.write(str(msg)+'\n')
+        fout.close()
+
     def getLexemData(self):
         try:
             lexem = self.main_stack[self.index]
@@ -201,13 +207,19 @@ class SyntaxAnalyzer():
     def syntaxAnalyzer(self, main_stack):
         self.writeToLog(
             f'Syntax analyzer started at [{datetime.datetime.now()}]')
+        self.myOutput(
+            f'Syntax analyzer started at [{datetime.datetime.now()}]')
         self.main_stack = main_stack
         self.q_1()
-        return str(bin(self.stack[0])).split('b')[1]
+        res = str(bin(self.stack[0])).split('b')[1]
+        self.myOutput(f'Result: {res}')
+        self.writeToLog(res)
+        return res
 
     def q_1(self):
         self.writeToLog('This is q_1')
         self.writeToLog(f'\tStack:\t{self.getLexemValues()}')
+        self.myOutput('\t' + str(self.getLexemValues()) + '\n')
         self.index = 0
         lexem_type, lexem_value = self.getLexemData()
 
@@ -692,6 +704,7 @@ class SyntaxAnalyzer():
         self.main_stack.append({'not_terminal': 'S'})
         self.main_stack += tmp
         self.writeToLog(f'\tGo\tfrom\tr_1 \tto\ts_0 \tpack 1:\t"S->E$"')
+        self.myOutput('Reduce 1: S -> E$')
         self.q_1()
 
     def r_2(self):
@@ -708,6 +721,7 @@ class SyntaxAnalyzer():
             f'\tCount:\t{self.stack[-2]} | {self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
+        self.myOutput('Reduce 2: E -> E | T')
         self.q_1()
 
     def r_3(self):
@@ -716,6 +730,7 @@ class SyntaxAnalyzer():
         lexem_type, lexem_value = self.getLexemData()
         self.main_stack[self.index] = {'not_terminal': 'E'}
         self.writeToLog(f'\tGo\tfrom\tr_3 \tto\ts_0 \tpack 3:\t"E->T"')
+        self.myOutput('Reduce 3: E -> T')
         self.q_1()
 
     def r_4(self):
@@ -732,6 +747,7 @@ class SyntaxAnalyzer():
             f'\tCount:\t{self.stack[-2]} ^ {self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
+        self.myOutput('Reduce 4: T -> T ^ K')
         self.q_1()
 
     def r_5(self):
@@ -740,6 +756,7 @@ class SyntaxAnalyzer():
         lexem_type, lexem_value = self.getLexemData()
         self.main_stack[self.index] = {'not_terminal': 'T'}
         self.writeToLog(f'\tGo\tfrom\tr_5 \tto\ts_0 \tpack 5:\t"T->K"')
+        self.myOutput('Reduce 5: T -> K')
         self.q_1()
 
     def r_6(self):
@@ -757,6 +774,7 @@ class SyntaxAnalyzer():
             f'\tCount:\t{self.stack[-2]} & {self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
+        self.myOutput('Reduce 6: K -> K & L')
         self.q_1()
 
     def r_7(self):
@@ -765,6 +783,7 @@ class SyntaxAnalyzer():
         lexem_type, lexem_value = self.getLexemData()
         self.main_stack[self.index] = {'not_terminal': 'K'}
         self.writeToLog(f'\tGo\tfrom\tr_7 \tto\ts_0 \tpack 7:\t"K->L"')
+        self.myOutput('Reduce 7: K -> L')
         self.q_1()
 
     def r_8(self):
@@ -782,6 +801,7 @@ class SyntaxAnalyzer():
             f'\tCount:\t>{self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-1]
         self.stack.append(new_res)
+        self.myOutput('Reduce 8: L -> <L')
         self.q_1()
 
     def r_9(self):
@@ -799,6 +819,7 @@ class SyntaxAnalyzer():
             f'\tCount:\t>{self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-1]
         self.stack.append(new_res)
+        self.myOutput('Reduce 9: L -> >L')
         self.q_1()
 
     def r_10(self):
@@ -808,6 +829,7 @@ class SyntaxAnalyzer():
         self.stack.append(lexem_value)
         self.main_stack[self.index] = {'not_terminal': 'L'}
         self.writeToLog(f'\tGo\tfrom\tr_9 \tto\ts_0 \tpack 9:\t"L->num"')
+        self.myOutput('Reduce 10: L -> num')
         self.q_1()
 
     def r_11(self):
@@ -819,6 +841,7 @@ class SyntaxAnalyzer():
         self.main_stack.append({'not_terminal': 'L'})
         self.main_stack += tmp
         self.writeToLog(f'\tGo\tfrom\tr_11 \tto\ts_0 \tpack 11:\t"L->(E)"')
+        self.myOutput('Reduce 11: L -> (E)')
         self.q_1()
 
 
@@ -872,7 +895,7 @@ try:
     stack = la1.lexicalAnalyzer('1&>0|1&0|(1&1)')
     print(stack)
     sa1 = SyntaxAnalyzer()
-    print(sa1.syntaxAnalyzer(stack))
+    sa1.syntaxAnalyzer(stack)
 except IncorrectLexic as err:
     print(err.message)
 except IncorrectSyntax as err:
