@@ -82,7 +82,11 @@ class LexicalAnalyzer():
         if symbol.isspace():
             self.q_0()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_27()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_2()
 
@@ -138,7 +142,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_19()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_4()
 
@@ -172,7 +180,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_20()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_6()
 
@@ -206,7 +218,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_21()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_8()
 
@@ -240,7 +256,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_22()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_10()
 
@@ -274,7 +294,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_23()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_12()
 
@@ -308,7 +332,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_24()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_14()
 
@@ -342,7 +370,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_25()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_16()
 
@@ -376,7 +408,11 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if (symbol == '-' or symbol.isdigit()):
+        if symbol == '-':
+            self.buff += symbol
+            self.q_27()
+
+        elif symbol.isdigit():
             self.buff += symbol
             self.q_18()
 
@@ -407,6 +443,141 @@ class LexicalAnalyzer():
             self.matrix[2, 2] = int(self.buff)
             self.buff = ''
             self.q_res({'number': self.matrix})
+
+        else:
+            self.q_err()
+
+    def q_19(self):
+        func_name = 'q_19'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_19()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_4()
+
+        else:
+            self.q_err()
+
+    def q_20(self):
+        func_name = 'q_20'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_20()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_6()
+
+        else:
+            self.q_err()
+
+    def q_21(self):
+        func_name = 'q_21'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_21()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_8()
+
+        else:
+            self.q_err()
+
+    def q_22(self):
+        func_name = 'q_22'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_22()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_10()
+
+        else:
+            self.q_err()
+
+    def q_23(self):
+        func_name = 'q_23'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_23()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_12()
+
+        else:
+            self.q_err()
+
+    def q_24(self):
+        func_name = 'q_24'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_24()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_14()
+
+        else:
+            self.q_err()
+
+    def q_25(self):
+        func_name = 'q_25'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_25()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_16()
+
+        else:
+            self.q_err()
+
+    def q_26(self):
+        func_name = 'q_26'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_26()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_18()
+
+        else:
+            self.q_err()
+
+    def q_27(self):
+        func_name = 'q_27'
+        self.writeToLog(f'This is {func_name}')
+        symbol = self.getch()
+
+        if symbol.isspace():
+            self.q_27()
+
+        elif symbol.isdigit():
+            self.buff += symbol
+            self.q_2()
 
         else:
             self.q_err()
