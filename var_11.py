@@ -1099,11 +1099,11 @@ class SyntaxAnalyzer():
 
         tmp = self.main_stack[self.index+1:]
         self.main_stack = self.main_stack[:self.index-2]
-        self.main_stack.append({'not_terminal': 'E'})
+        self.main_stack.append({'not_terminal': 'T'})
         self.main_stack += tmp
         self.Debug(f'\tGo\tfrom\t{func_name} \tto\ts_0')
         new_res = self.stack[-2].dot(self.stack[-1])
-        self.Info('Reduce 3: E -> E * T')
+        self.Info('Reduce 3: T -> T * F')
         self.Debug(
             f'\tCount:\t{self.stack[-2]} * {self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-2]
