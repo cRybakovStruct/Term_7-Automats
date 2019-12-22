@@ -681,7 +681,7 @@ class SyntaxAnalyzer():
         self.main_stack += tmp
         self.writeToLog(f'\tGo\tfrom\tr_6 \tto\ts_0 \tpack 2:\t"T->T/F"')
         try:
-            new_res = int(self.stack[-2] / self.stack[-1])
+            new_res = self.stack[-2] / self.stack[-1]
             self.writeToLog(
                 f'\tCount:\t{self.stack[-2]} / {self.stack[-1]} = {new_res}')
             self.stack = self.stack[:-2]
