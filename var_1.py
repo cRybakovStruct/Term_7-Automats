@@ -75,7 +75,7 @@ class LexicalAnalyzer():
         if not symbol:
             return False
 
-        if symbol.isspace():
+        elif symbol.isspace():
             return self.q_0()
 
         elif symbol.isdigit():
@@ -145,7 +145,7 @@ class LexicalAnalyzer():
             return self.q_res({'number': complex(self.buff)})
 
         elif (symbol.isspace() or symbol in self.math_symbols):
-            return self.q_res({'variable': self.buff})
+            return self.q_res({'number': complex(self.buff)})
 
         else:
             self.index += 1
@@ -764,12 +764,12 @@ def parseVariables(variables):
 
 
 try:
-    # a = ['a=3+1', 'b=1*2']
+    a = ['a=(3+1)']
 
     la1 = LexicalAnalyzer()
-    # variables = parseVariables(a)
-    # la1.setVariables(variables)
-    stack = la1.lexicalAnalyzer('2.i#-1i+i+-4.3')
+    variables = parseVariables(a)
+    la1.setVariables(variables)
+    stack = la1.lexicalAnalyzer('2.i#-1i+i+a')
     print(stack)
     sa1 = SyntaxAnalyzer()
     print(sa1.syntaxAnalyzer(stack))

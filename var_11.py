@@ -82,7 +82,7 @@ class LexicalAnalyzer():
         if symbol.isspace():
             self.q_0()
 
-        if symbol == '-':
+        elif symbol == '-':
             self.buff += symbol
             self.q_27()
 
@@ -106,13 +106,17 @@ class LexicalAnalyzer():
         self.writeToLog(f'This is {func_name}')
         symbol = self.getch()
 
-        if symbol.isalnum():
+        if not symbol:
+            self.index += 1
+            self.q_res({'variable': self.buff})
+
+        elif symbol.isalnum():
             self.buff += symbol
             self.q_1()
 
         elif symbol in self.math_symbols:
-            self.buff += symbol
-            self.index += 1
+            # self.buff += symbol
+            # self.index += 1
             self.q_res({'variable': self.buff})
 
         else:
@@ -1196,8 +1200,10 @@ def parseVariables(variables):
         variable_name = list(la1.lexicalAnalyzer(tmp[0])[0].values())[0]
 
         la2 = LexicalAnalyzer()
+        variable_value = la2.lexicalAnalyzer(tmp[1])
+
         sa = SyntaxAnalyzer()
-        variable_value = int(sa.syntaxAnalyzer(la2.lexicalAnalyzer(tmp[1])), 5)
+        variable_value = sa.syntaxAnalyzer(variable_value)
 
         if (variable_name is not None) and (variable_value is not None):
             res_variables[variable_name] = variable_value
@@ -1206,13 +1212,13 @@ def parseVariables(variables):
 
 
 try:
-    # a = ['a=3+1', 'b=1*2']
+    a = ['a=(2,0,2,2,0,0,2,0,2)']
 
     la1 = LexicalAnalyzer()
-    # variables = parseVariables(a)
-    # la1.setVariables(variables)
+    variables = parseVariables(a)
+    la1.setVariables(variables)
     stack = la1.lexicalAnalyzer(
-        '(1,1,0,0,0,1,1,0,1+2,0,2,2,0,0,2,0,2)*1,0,0,0,0,0,0,0,1')
+        '(1,1,0,0,0,1,1,0,1+a)*1,0,0,0,0,0,0,0,1')
     print(stack)
     sa1 = SyntaxAnalyzer(loglevel='Info')
     sa1.syntaxAnalyzer(stack)
