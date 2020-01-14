@@ -179,7 +179,7 @@ class LexicalAnalyzer():
         symbol = self.getch()
 
         if symbol == 'i':
-            self.index +=1
+            self.index += 1
             self.buff += 'j'
             return self.q_res({'number': complex(self.buff)})
 
@@ -200,6 +200,7 @@ class LexicalAnalyzer():
         self.index -= 1
         self.buff = ''
         return self.q_0()
+
 
 class SyntaxAnalyzer():
     def __init__(self):
@@ -234,7 +235,6 @@ class SyntaxAnalyzer():
         for lexem in self.main_stack:
             res.append(str(lexem[list(lexem)[0]]))
         return ' '.join(res)
-
 
     def syntaxAnalyzer(self, main_stack):
         self.writeToLog(
@@ -721,6 +721,7 @@ class SyntaxAnalyzer():
         self.writeToLog(f'\tGo\tfrom\tr_9 \tto\ts_0 \tpack 9:\t"F->num"')
         self.myOutput('Reduce 9: F -> num')
         self.q_0()
+
 
 class AnalyserError(Exception):
     '''Some error in some analyser'''
