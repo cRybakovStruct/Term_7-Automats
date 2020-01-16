@@ -472,16 +472,14 @@ class SyntaxAnalyzer():
         self.main_stack = self.main_stack[:self.index-2]
         self.main_stack.append({'not_terminal': 'T'})
         self.main_stack += tmp
-        try:
-            new_res = self.stack[-2] / self.stack[-1]
-            logging.debug(
-                f'\tCount:\t{self.stack[-2]} / {self.stack[-1]} = {new_res}')
-            self.stack = self.stack[:-2]
-            self.stack.append(new_res)
-            logging.info('\tReduce 6: E -> E / T')
-            self.q_0()
-        except:
-            raise ZeroDivisionError()
+
+        new_res = self.stack[-2] / self.stack[-1]
+        logging.debug(
+            f'\tCount:\t{self.stack[-2]} / {self.stack[-1]} = {new_res}')
+        self.stack = self.stack[:-2]
+        self.stack.append(new_res)
+        logging.info('\tReduce 6: E -> E / T')
+        self.q_0()
 
     @saReduce
     def r_7(self):
@@ -511,7 +509,6 @@ try:
     # examples:
 
     stack = la1.lexicalAnalyzer('{1i}+{2-3i}')
-
 
     print(stack)
     sa1 = SyntaxAnalyzer()

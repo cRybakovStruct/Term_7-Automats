@@ -639,16 +639,14 @@ class SyntaxAnalyzer():
         self.main_stack.append({'not_terminal': 'T'})
         self.main_stack += tmp
         self.writeToLog(f'\tGo\tfrom\tr_6 \tto\ts_0 \tpack 2:\t"T->T/F"')
-        try:
-            new_res = int(self.stack[-2] / self.stack[-1])
-            self.writeToLog(
-                f'\tCount:\t{self.stack[-2]} / {self.stack[-1]} = {new_res}')
-            self.stack = self.stack[:-2]
-            self.stack.append(new_res)
-            self.myOutput('Reduce 6: T -> T / F')
-            self.q_0()
-        except:
-            raise ZeroDivisionError()
+
+        new_res = int(self.stack[-2] / self.stack[-1])
+        self.writeToLog(
+            f'\tCount:\t{self.stack[-2]} / {self.stack[-1]} = {new_res}')
+        self.stack = self.stack[:-2]
+        self.stack.append(new_res)
+        self.myOutput('Reduce 6: T -> T / F')
+        self.q_0()
 
     def r_7(self):
         self.writeToLog('This is r_7')
