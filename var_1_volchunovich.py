@@ -154,7 +154,7 @@ class LexicalAnalyzer():
             self.buff += self.symbol
             return self.q_3()
         elif self.symbol == ',':
-            self.buff += self.symbol
+            self.buff += '.'
             return self.q_7()
         elif self.symbol == '}':
             self.index += 1
@@ -193,7 +193,7 @@ class LexicalAnalyzer():
             self.buff += 'j'
             return self.q_4()
         elif self.symbol == ',':
-            self.buff += self.symbol
+            self.buff += '.'
             return self.q_9()
         else:
             return self.q_err()
@@ -213,7 +213,7 @@ class LexicalAnalyzer():
             return self.q_8()
         elif self.symbol == '}':
             self.index += 1
-            return self.q_err({'number': complex(self.buff)})
+            return self.q_res({'number': complex(self.buff)})
         else:
             return self.q_err()
 
@@ -508,7 +508,8 @@ try:
 
     # examples:
 
-    stack = la1.lexicalAnalyzer('{1i}+{2-3i}')
+    # stack = la1.lexicalAnalyzer('{1i}+{2-3i}')
+    stack = la1.lexicalAnalyzer('{1i}+{2-3i}*{5}+{-5-5i}/{5,5}')
 
     print(stack)
     sa1 = SyntaxAnalyzer()
