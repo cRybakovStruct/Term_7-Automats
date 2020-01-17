@@ -152,14 +152,20 @@ class LexicalAnalyzer():
     def q_2(self):
         if not self.symbol:
             self.index += 1
-            return self.q_res({'number': int(self.buff)})
+            value = int(self.buff)
+            if value > 10000 or value < -10000:
+                raise IncorrectLexic('Number out of range')
+            return self.q_res({'number': value})
 
         if self.symbol.isdigit():
             self.buff += self.symbol
             return self.q_2()
 
         elif self.symbol in self.math_symbols:
-            return self.q_res({'number': int(self.buff)})
+            value = int(self.buff)
+            if value > 10000 or value < -10000:
+                raise IncorrectLexic('Number out of range')
+            return self.q_res({'number': value})
 
         else:
             return self.q_err()
@@ -552,7 +558,7 @@ try:
 
     # examples:
 
-    stack = la1.lexicalAnalyzer('10#-10')  # 20
+    stack = la1.lexicalAnalyzer('1000000#-10')  # 20
     # stack = la1.lexicalAnalyzer('-10001') # 10000
     # stack = la1.lexicalAnalyzer('-10002') # 9999
     # stack = la1.lexicalAnalyzer('10001') # -10000
@@ -575,10 +581,10 @@ try:
     sa1 = SyntaxAnalyzer()
     print(sa1.syntaxAnalyzer(stack))
 except IncorrectLexic as err:
-    print(err.message)
+    print(f'Error! {err.message}')
 except IncorrectSyntax as err:
-    print(err.message)
+    print(f'Error! {err.message}')
 except AnalyserError as err:
-    print(err.message)
+    print(f'Error! {err.message}')
 except ZeroDivisionError:
     print('Was zero-dividing')
