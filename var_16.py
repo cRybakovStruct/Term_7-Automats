@@ -475,7 +475,6 @@ class SyntaxAnalyzer():
         self.main_stack.append({'not_terminal': 'E'})
         self.main_stack += tmp
         new_res = self.stack[-2] - self.stack[-1]
-        new_res = check_cicle(new_res)
         logging.debug(
             f'\tCount:\t{self.stack[-2]} # {self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-2]
@@ -500,7 +499,6 @@ class SyntaxAnalyzer():
         self.main_stack.append({'not_terminal': 'T'})
         self.main_stack += tmp
         new_res = self.stack[-2] * self.stack[-1]
-        new_res = check_cicle(new_res)
         logging.debug(
             f'\tCount:\t{self.stack[-2]} * {self.stack[-1]} = {new_res}')
         self.stack = self.stack[:-2]
