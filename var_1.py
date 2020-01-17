@@ -1,6 +1,8 @@
 import datetime
 import os.path
 
+if not os.path.exists('.\logs'):
+    os.makedirs('.\logs')
 
 class LexicalAnalyzer():
 
@@ -14,7 +16,7 @@ class LexicalAnalyzer():
 
     def writeToLog(self, msg):
         fout = open(
-            './LexicalAnalyzer.log', 'ta')
+            './logs/var_1.log', 'ta')
         fout.write(str(msg)+'\n')
         print(msg)
         fout.close()
@@ -209,7 +211,7 @@ class SyntaxAnalyzer():
 
     def writeToLog(self, msg):
         fout = open(
-            './SyntaxAnalyzer.log', 'ta')
+            './logs/var_1.log', 'ta')
         fout.write(str(msg)+'\n')
         print(msg)
         fout.close()

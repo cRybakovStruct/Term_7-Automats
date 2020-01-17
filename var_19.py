@@ -3,8 +3,11 @@ import os.path
 import logging
 import inspect
 
+if not os.path.exists('.\logs'):
+    os.makedirs('.\logs')
+
 filename = '.'.join(os.path.basename(__file__).split('.')[:-1])
-logging.basicConfig(filename=f'{filename}.log',
+logging.basicConfig(filename=f'.\logs\{filename}.log',
                     level=logging.DEBUG,
                     filemode='w',
                     format='%(message)s')

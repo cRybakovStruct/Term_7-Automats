@@ -2,7 +2,6 @@ import datetime
 import os.path
 import logging
 import inspect
-import numpy as np
 
 
 if not os.path.exists('.\logs'):
@@ -90,9 +89,8 @@ class LexicalAnalyzer():
         self.input_string = ''
         self.lexems = []
         self.buff = ''
-        self.math_symbols = '+-*() '
+        self.math_symbols = '+#*() '
         self.variables = {}
-        self.vector = np.array([0, 0, 0])
 
     def lexicalAnalyzer(self, s_input: str):
         '''
@@ -125,27 +123,23 @@ class LexicalAnalyzer():
 
         if not self.symbol:
             return False
-
+        elif self.symbol == '-':
+            self.buff += self.symbol
+            return self.q_1()
         elif self.symbol in self.math_symbols:
             self.buff += self.symbol
-            self.index += 1
-            return self.q_res({'operation': self.symbol})
-        elif self.symbol == '{':
-            # self.buff += self.symbol
-            return self.q_1()
+            return self.q_res([{'operation': self.buff}])
+        elif self.symbol.isdigit:
+            self.buff += self.symbol
+            return self.q_2()
         else:
             return self.q_err()
 
     @laDecorator
     def q_1(self):
-        if self.symbol == '-':
+        if self.symbol.isdigit:
             self.buff += self.symbol
             return self.q_2()
-
-        elif self.symbol.isdigit():
-            self.buff += self.symbol
-            return self.q_3()
-
         else:
             return self.q_err()
 
@@ -154,8 +148,10 @@ class LexicalAnalyzer():
 
         if self.symbol.isdigit():
             self.buff += self.symbol
+            return self.q_2()
+        elif self.symbol == 'x':
+            self.buff += self.symbol
             return self.q_3()
-
         else:
             return self.q_err()
 
@@ -164,103 +160,37 @@ class LexicalAnalyzer():
 
         if self.symbol.isdigit():
             self.buff += self.symbol
-            return self.q_3()
-        elif self.symbol == 'i':
-            self.vector[0] = int(self.buff)
-            self.buff = ''
             return self.q_4()
-        elif self.symbol == 'j':
-            self.vector[1] = int(self.buff)
-            self.buff = ''
-            return self.q_5()
-        elif self.symbol == 'k':
-            self.vector[2] = int(self.buff)
-            self.buff = ''
-            return self.q_5()
-
         else:
             return self.q_err()
 
     @laDecorator
     def q_4(self):
-        if self.symbol in '+-':
+        if self.symbol is None:
+            tmp = self.buff.split('x')
+            return self.q_res([{'number': {tmp[1]: int(tmp[0])}}])
+        elif self.symbol.isdigit():
             self.buff += self.symbol
-            return self.q_8()
-        elif self.symbol == '}':
-            self.index += 1
-            return self.q_res({'number': self.vector})
-        else:
-            return self.q_err()
-
-    @laDecorator
-    def q_5(self):
-        if self.symbol in '+-':
-            self.buff += self.symbol
-            return self.q_10()
-        elif self.symbol == '}':
-            self.index += 1
-            return self.q_res({'number': self.vector})
-        else:
-            return self.q_err()
-
-    @laDecorator
-    def q_6(self):
-        if self.symbol == '}':
-            self.index += 1
-            return self.q_res({'number': self.vector})
-        else:
-            return self.q_err()
-
-    @laDecorator
-    def q_7(self):
-        if self.symbol.isdigit():
-            self.buff += self.symbol
-            return self.q_7()
-        elif self.symbol == 'k':
-            self.vector[2] = int(self.buff)
-            self.buff = ''
-            return self.q_5()
-        else:
-            return self.q_err()
-
-    @laDecorator
-    def q_8(self):
-        if self.symbol.isdigit():
-            self.buff += self.symbol
-            return self.q_9()
-        else:
-            return self.q_err()
-
-    @laDecorator
-    def q_9(self):
-        if self.symbol.isdigit():
-            self.buff += self.symbol
-            return self.q_9()
-        elif self.symbol == 'j':
-            self.vector[1] = int(self.buff)
-            self.buff = ''
-            return self.q_5()
-        else:
-            return self.q_err()
-
-    @laDecorator
-    def q_10(self):
-        if self.symbol.isdigit():
-            self.buff += self.symbol
-            return self.q_7()
+            return self.q_4()
+        elif self.symbol in self.math_symbols:
+            tmp = self.buff.split('x')
+            return self.q_res([{'number': {tmp[1]: int(tmp[0])}}, {'operation': self.symbol}])
         else:
             return self.q_err()
 
     def q_err(self):
+        logging.info(
+            f'\tGo from {inspect.stack()[1][3]}\tto\tq_err \twith:\t{self.symbol}')
         logging.info('Error: Incorrect input string')
         raise IncorrectLexic('Incorrect input string')
 
-    def q_res(self, lexem):
-        logging.info(f'\tPushing: {lexem}')
-        self.lexems.append(lexem)
-        self.index -= 1
+    def q_res(self, lexems):
+
+        for lexem in lexems:
+            logging.info(f'\t\tPushing: {lexem}')
+            self.lexems.append(lexem)
+        # self.index -= 1
         self.buff = ''
-        self.vector = np.array([0, 0, 0])
         self.symbol = ''
         return self.q_0()
 
@@ -284,7 +214,11 @@ class SyntaxAnalyzer():
     def getLexemValues(self):
         res = []
         for lexem in self.main_stack:
-            res.append(str(lexem[list(lexem)[0]]))
+            key = list(lexem)[0]
+            if key == 'number':
+                res.append(lexem_repr(lexem[key]))
+            else:
+                res.append(str(lexem[key]))
         return ' '.join(res)
 
     def syntaxAnalyzer(self, main_stack):
@@ -292,7 +226,7 @@ class SyntaxAnalyzer():
             f'Syntax analyzer started at [{datetime.datetime.now()}]')
         self.main_stack = main_stack
         self.q_0()
-        res = self.stack[0]
+        res = lexem_repr(self.stack[0])
 
         logging.info(f'Result: {res}')
         return res
@@ -333,7 +267,7 @@ class SyntaxAnalyzer():
             self.q_6()
         elif self.lexem_value == '*':
             self.q_7()
-        elif self.lexem_value == '-':
+        elif self.lexem_value == '#':
             self.q_8()
         else:
             self.q_err()
@@ -402,7 +336,7 @@ class SyntaxAnalyzer():
             self.q_6()
         elif self.lexem_value == '*':
             self.q_7()
-        elif self.lexem_value == '-':
+        elif self.lexem_value == '#':
             self.q_8()
         elif self.lexem_value == ')':
             self.q_13()
@@ -449,7 +383,7 @@ class SyntaxAnalyzer():
         self.main_stack += tmp
         new_res = sum(self.stack[-2], self.stack[-1])
         logging.debug(
-            f'\tCount:\t{self.stack[-2]} + {self.stack[-1]} = {new_res}')
+            f'\tCount:\t{lexem_repr(self.stack[-2])} + {lexem_repr(self.stack[-1])} = {lexem_repr(new_res)}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
         logging.info('\tReduce 2: E -> E + T')
@@ -472,9 +406,9 @@ class SyntaxAnalyzer():
         self.main_stack = self.main_stack[:self.index-2]
         self.main_stack.append({'not_terminal': 'E'})
         self.main_stack += tmp
-        new_res = mul(self.stack[-2], self.stack[-1])
+        new_res = csub(self.stack[-2], self.stack[-1])
         logging.debug(
-            f'\tCount:\t{self.stack[-2]} * {self.stack[-1]} = {new_res}')
+            f'\tCount:\t{lexem_repr(self.stack[-2])} * {lexem_repr(self.stack[-1])} = {lexem_repr(new_res)}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
         logging.info('\tReduce 5: E -> E * T')
@@ -491,7 +425,7 @@ class SyntaxAnalyzer():
 
         new_res = sub(self.stack[-2], self.stack[-1])
         logging.debug(
-            f'\tCount:\t{self.stack[-2]} - {self.stack[-1]} = {new_res}')
+            f'\tCount:\t{lexem_repr(self.stack[-2])} # {lexem_repr(self.stack[-1])} = {lexem_repr(new_res)}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
         logging.info('\tReduce 6: E -> E - T')
@@ -519,22 +453,78 @@ class SyntaxAnalyzer():
     # endregion
 
 
+def lexem_repr(lexem):
+    result = ''
+    for key in lexem.keys():
+        if lexem[key] == 0:
+            continue
+        if (result != '') and (lexem[key] > 0):
+            result += '+'
+        result += f'{lexem[key]}_{key}'
+    if result == '':
+        result = '0'
+    return result
+
+
 def sum(value1, value2):
-    return value1 + value2
+    result = value1.copy()
+    for key in value2.keys():
+        try:
+            result[key] += value2[key]
+        except KeyError:
+            result[key] = value2[key]
+    return result
 
 
-def mul(value1, value2):
-    return np.array([value1[1]*value2[2]-value1[2]*value2[1], -(value1[0]*value2[2]-value1[2]*value2[0]), value1[0]*value2[1]-value1[1]*value2[0]])
+def csub(value1, value2):
+    result = value1.copy()
+    for key in value2.keys():
+        try:
+            result[key] = singleCsub(result[key], value2[key])
+        except KeyError:
+            result[key] = value2[key]
+    return result
 
 
 def sub(value1, value2):
-    return value1 - value2
+    result = value1.copy()
+    for key in value2.keys():
+        try:
+            result[key] -= value2[key]
+        except KeyError:
+            result[key] = value2[key]
+    return result
+
+
+def singleCsub(value1, value2):
+    result = 0
+    i = 0
+    while (value1 > 0) or (value2 > 0):
+        v1 = value1 % 10
+        value1 = int(value1 / 10)
+        v2 = value2 % 10
+        value2 = int(value2 / 10)
+        res = v1-v2
+        if res < 0:
+            res = 10 + res
+        result += 10**i*res
+        i += 1
+    result += value1*10**i
+    result += value2*10**i
+    return result
 
 
 try:
     la = LexicalAnalyzer()
 
-    stack = la.lexicalAnalyzer('{1i+2j+3k}*{2i+1j-2k}')
+    # сложение : +
+    # вычитание : #
+    # кольцевая разность : *
+    # отрийательный элемент : -
+
+    # stack = la.lexicalAnalyzer('(-1x1#1x2)#(1x2+1x3)')
+    # stack = la.lexicalAnalyzer('3x1*5x1')
+    stack = la.lexicalAnalyzer('3x1#5x1')
 
     print(stack)
     sa = SyntaxAnalyzer()
