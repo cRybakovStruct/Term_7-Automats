@@ -482,7 +482,7 @@ def csub(value1, value2):
         try:
             result[key] = singleCsub(result[key], value2[key])
         except KeyError:
-            result[key] = value2[key]
+            result[key] = -value2[key]
     return result
 
 
@@ -492,7 +492,7 @@ def sub(value1, value2):
         try:
             result[key] -= value2[key]
         except KeyError:
-            result[key] = value2[key]
+            result[key] = -value2[key]
     return result
 
 

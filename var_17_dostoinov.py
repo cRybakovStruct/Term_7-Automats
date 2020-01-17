@@ -415,7 +415,7 @@ class SyntaxAnalyzer():
 
     @saReduce
     def r_6(self):
-        '''T->T/F'''
+        '''E->E#T'''
 
         tmp = self.main_stack[self.index+1:]
         self.main_stack = self.main_stack[:self.index-2]
@@ -427,7 +427,7 @@ class SyntaxAnalyzer():
             f'\tCount:\t{lexem_repr(self.stack[-2])} # {lexem_repr(self.stack[-1])} = {lexem_repr(new_res)}')
         self.stack = self.stack[:-2]
         self.stack.append(new_res)
-        logging.info('\tReduce 6: E -> E - T')
+        logging.info('\tReduce 6: E -> E # T')
         self.q_0()
 
     @saReduce
@@ -481,7 +481,7 @@ def csub(value1, value2):
         try:
             result[key] = singleCsub(result[key], value2[key])
         except KeyError:
-            result[key] = value2[key]
+            result[key] = -value2[key]
     return result
 
 
@@ -491,7 +491,7 @@ def sub(value1, value2):
         try:
             result[key] -= value2[key]
         except KeyError:
-            result[key] = value2[key]
+            result[key] = -value2[key]
     return result
 
 
@@ -523,7 +523,8 @@ try:
 
     # stack = la.lexicalAnalyzer('(-1x1#1x2)#(1x2+1x3)')
     # stack = la.lexicalAnalyzer('3x1*5x1')
-    stack = la.lexicalAnalyzer('3x1#5x1')
+    # stack = la.lexicalAnalyzer('3x1#5x1')
+    stack = la.lexicalAnalyzer('(-1x1#-2x2)#(1x2+1x3)+6x2')
 
     print(stack)
     sa = SyntaxAnalyzer()
