@@ -40,7 +40,7 @@ def laDecorator(func):
 
         if self.symbol != '':
             logging.info(
-                f'\tGo from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith:\t{self.symbol}')
+                f'Go from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith:\t{self.symbol}')
 
         # logging.info(f'\tThis is {func.__name__}')
         self.getch()
@@ -53,10 +53,10 @@ def saWalk(func):
     def wrapper(self):
 
         logging.debug(
-            f'\t\tGo from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith "{self.lexem_value}"\n')
+            f'\tGo from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith "{self.lexem_value}"')
 
-        logging.debug(f'\tThis is {func.__name__}')
-        logging.debug(f'\t\tStack:\t{self.getLexemValues()}')
+        logging.debug(f'This is {func.__name__}')
+        logging.debug(f'\tStack:\t{self.getLexemValues()}')
         self.index += 1
         self.lexem_type, self.lexem_value = self.getLexemData()
 
@@ -69,13 +69,13 @@ def saReduce(func):
 
         reduce_number = (func.__name__).split('_')[1]
         logging.debug(
-            f'\t\tGo from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith "{self.lexem_value}"\n')
+            f'\tGo from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith "{self.lexem_value}"')
 
-        logging.debug(f'\tThis is {func.__name__}')
+        logging.debug(f'This is {func.__name__}')
         self.index -= 1
         self.lexem_type, self.lexem_value = self.getLexemData()
         logging.debug(
-            f'\t\tGo\tfrom\t{func.__name__} \tto\ts_0 \tpack {reduce_number}:\t"{func.__doc__}"\n')
+            f'\tGo\tfrom\t{func.__name__} \tto\ts_0 \tpack {reduce_number}:\t"{func.__doc__}"')
 
         func(self)
     return wrapper
@@ -187,7 +187,7 @@ class LexicalAnalyzer():
     def q_res(self, lexems):
 
         for lexem in lexems:
-            logging.info(f'\t\tPushing: {lexem}')
+            logging.info(f'\tPushing: {lexem}')
             self.lexems.append(lexem)
         # self.index -= 1
         self.buff = ''
@@ -238,8 +238,8 @@ class SyntaxAnalyzer():
     # region states
 
     def q_0(self):
-        logging.debug('\tThis is q_0')
-        logging.info(f'\t\tStack:\t{self.getLexemValues()}')
+        logging.debug('This is q_0')
+        logging.info(f'\tStack:\t{self.getLexemValues()}')
         self.index = 0
         self.lexem_type, self.lexem_value = self.getLexemData()
 
@@ -370,7 +370,6 @@ class SyntaxAnalyzer():
         self.main_stack.append({'not_terminal': 'S'})
         self.main_stack += tmp
         logging.info('\tReduce 1: S -> E$')
-        logging.debug('')
         self.q_0()
 
     @saReduce
