@@ -30,18 +30,15 @@ class IncorrectSyntax(AnalyserError):
     def __init__(self, message):
         self.message = message
 
-
 def laDecorator(func):
-    def wrapper(self, *argv, **kwargv):
-
+    def wrapper(self):
         if self.symbol != '':
             logging.info(
                 f'\tGo from {inspect.stack()[1][3]}\tto\t{func.__name__} \twith:\t{self.symbol}')
-
         # logging.info(f'\tThis is {func.__name__}')
         self.getch()
 
-        return func(self, *argv, **kwargv)
+        return func(self)
     return wrapper
 
 
@@ -214,6 +211,9 @@ class LexicalAnalyzer():
         elif self.symbol == '}':
             self.index += 1
             return self.q_res({'number': complex(self.buff)})
+        elif self.symbol in '+-':
+            self.buff += self.symbol
+            return self.q_5()
         else:
             return self.q_err()
 
@@ -237,11 +237,13 @@ class LexicalAnalyzer():
             return self.q_err()
 
     def q_err(self):
+        logging.info(
+                f'\tGo from {inspect.stack()[1][3]}\tto\tq_err \twith:\t{self.symbol}')
         logging.info('Error: Incorrect input string')
         raise IncorrectLexic('Incorrect input string')
 
     def q_res(self, lexem):
-        logging.info(f'\tPushing: {lexem}')
+        logging.info(f'\t\tPushing: {lexem}')
         self.lexems.append(lexem)
         self.index -= 1
         self.buff = ''
@@ -509,7 +511,7 @@ try:
     # examples:
 
     # stack = la1.lexicalAnalyzer('{1i}+{2-3i}')
-    stack = la1.lexicalAnalyzer('{1i}+{2-3i}*{5}+{-5-5i}/{5,5}')
+    stack = la1.lexicalAnalyzer('{1i}+{2-3,0i}*{5}+{-5,5-5,5i}/{5,5}')
 
     print(stack)
     sa1 = SyntaxAnalyzer()
