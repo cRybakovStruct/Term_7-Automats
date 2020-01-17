@@ -211,6 +211,9 @@ class LexicalAnalyzer():
         if self.symbol.isdigit():
             self.buff += self.symbol
             return self.q_8()
+        elif self.symbol == 'i':
+            self.buff += 'j'
+            return self.q_4()
         elif self.symbol == '}':
             self.index += 1
             return self.q_res({'number': complex(self.buff)})
@@ -514,7 +517,7 @@ try:
     # examples:
 
     # stack = la1.lexicalAnalyzer('{1i}+{2-3i}')
-    stack = la1.lexicalAnalyzer('{1i}+{2-3,0i}*{5}+{-5,5-5,5i}/{5,5}')
+    stack = la1.lexicalAnalyzer('{1,0i}+{2,0-3,0i}*{5}+{-5,0-5,0i}/{5,0}')
 
     print(stack)
     sa1 = SyntaxAnalyzer()
