@@ -170,14 +170,12 @@ class LexicalAnalyzer():
     @laDecorator
     def q_4(self):
         if self.symbol is None:
-            # TODO: check it
             tmp = [int(x) for x in self.buff.split('/')]
             return self.q_res([{'number': Fraction(tmp[0], tmp[1])}])
         elif self.symbol.isdigit():
             self.buff += self.symbol
             return self.q_4()
         elif self.symbol in self.math_symbols:
-            # TODO: check it
             tmp = [int(x) for x in self.buff.split('/')]
             return self.q_res([{'number': Fraction(tmp[0], tmp[1])}, {'operation': self.symbol}])
         else:
