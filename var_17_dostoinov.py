@@ -459,7 +459,7 @@ def lexem_repr(lexem):
             continue
         if (result != '') and (lexem[key] > 0):
             result += '+'
-        result += f'{lexem[key]}х{key}'
+        result += f'{lexem[key]}x{key}'
     if result == '':
         result = '0'
     return result
