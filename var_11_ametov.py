@@ -571,16 +571,9 @@ class LexicalAnalyzer():
 
 
 class SyntaxAnalyzer():
-    def __init__(self, loglevel='Debug'):
+    def __init__(self):
         self.index = 0
         self.stack = []
-        self.logfile = './Var11_output.log'
-        self.loglevel = loglevel
-        self.loglevels = {'Debug': 0, 'Info': 1}
-
-    def clearLog(self):
-        fout = open(self.logfile, 'w')
-        fout.close()
 
     def getLexemData(self):
         try:
@@ -608,8 +601,7 @@ class SyntaxAnalyzer():
         return res
 
     def q_err(self):
-        func_name = 'q_err'
-        self.Debug(f'this is {func_name}')
+        logging.debug('This is q_err')
         raise IncorrectSyntax('Incorrect or unexpected lexem')
 
     # region states
@@ -731,10 +723,6 @@ class SyntaxAnalyzer():
 
     @saWalk
     def q_8(self):
-        func_name = 'q_8'
-        self.Debug(f'this is {func_name}')
-        self.index += 1
-        self.lexem_type, self.lexem_value = self.getLexemData()
 
         if self.lexem_value == '(':
             self.q_4()
@@ -944,10 +932,10 @@ try:
 
     la1 = LexicalAnalyzer()
     stack = la1.lexicalAnalyzer(
-        '1,1,0,0,0,1,1,0,1*1,0,0,0,0,0,0,0,1')
+        '1,1,0,0,0,1,1,0,1#1,0,0,0,0,0,0,0,1')
     print(stack)
-    sa1 = SyntaxAnalyzer(loglevel='Info')
-    sa1.syntaxAnalyzer(stack)
+    sa1 = SyntaxAnalyzer()
+    print(sa1.syntaxAnalyzer(stack))
 except IncorrectLexic as err:
     print(err.message)
 except IncorrectSyntax as err:
